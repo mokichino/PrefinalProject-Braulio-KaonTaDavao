@@ -37,11 +37,16 @@ class EateryController extends Controller
     public function store(StoreEateryRequest $request)
     {
         $data = $request->validated();
-        $features = $data['features'] ?? [];
+        $features = $data['features'];
         unset($data['features'], $data['permit_no'], $data['expires_on']);
-        $eatery = Eatery::create($data + ['slug' => Str::slug($data['name']), 'is_open' => $request->boolean('is_open')]);
-        $eatery->permit()->create($request->safe()->only(['permit_no', 'expires_on']));
+
+        $eatery = Eatery::create($data + ['slug' => Str::slug($data['name'])]);
+        $eatery->permit()->create([
+            'permit_no' => $request->validated()['permit_no'],
+            'expires_on' => $request->validated()['expires_on'],
+        ]);
         $eatery->features()->sync($features);
+
         return redirect()->route('eateries.show', $eatery)->with('success', 'Eatery added.');
     }
 
@@ -69,11 +74,16 @@ class EateryController extends Controller
     public function update(UpdateEateryRequest $request, Eatery $eatery)
     {
         $data = $request->validated();
-        $features = $data['features'] ?? [];
+        $features = $data['features'];
         unset($data['features'], $data['permit_no'], $data['expires_on']);
-        $eatery->update($data + ['slug' => Str::slug($data['name']), 'is_open' => $request->boolean('is_open')]);
-        $eatery->permit()->updateOrCreate([], $request->safe()->only(['permit_no', 'expires_on']));
+
+        $eatery->update($data + ['slug' => Str::slug($data['name'])]);
+        $eatery->permit()->updateOrCreate([], [
+            'permit_no' => $request->validated()['permit_no'],
+            'expires_on' => $request->validated()['expires_on'],
+        ]);
         $eatery->features()->sync($features);
+
         return redirect()->route('eateries.show', $eatery)->with('success', 'Eatery updated.');
     }
 
@@ -87,6 +97,7 @@ class EateryController extends Controller
         $eatery->dishes()->delete();
         $eatery->reviews()->delete();
         $eatery->delete();
+
         return redirect()->route('eateries.index')->with('success', 'Eatery deleted.');
     }
 }

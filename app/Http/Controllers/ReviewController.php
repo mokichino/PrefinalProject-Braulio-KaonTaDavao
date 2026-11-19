@@ -10,13 +10,16 @@ class ReviewController extends Controller
 {
     public function store(StoreReviewRequest $request, Eatery $eatery)
     {
-        $eatery->reviews()->create($request->validated() + ['user_id' => auth()->id() ?? \App\Models\User::first()->id]);
-        return back()->with('success', 'Salamat! Review posted.');
+        $eatery->reviews()->create($request->validated());
+
+        return redirect()->route('eateries.show', $eatery)->with('success', 'Salamat! Review posted.');
     }
 
     public function destroy(Review $review)
     {
+        $eatery = $review->eatery;
         $review->delete();
-        return back()->with('success', 'Review deleted.');
+
+        return redirect()->route('eateries.show', $eatery)->with('success', 'Review deleted.');
     }
 }

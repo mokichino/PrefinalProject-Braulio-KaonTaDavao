@@ -23,13 +23,18 @@ class StoreReviewRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'user_id' => ['required', 'exists:users,id'],
             'rating' => ['required', 'integer', 'between:1,5'],
-            'body' => ['required', 'string', 'max:1000'],
+            'body' => ['required', 'string', 'min:10', 'max:1000'],
         ];
     }
 
     public function messages(): array
     {
-        return ['rating.required' => 'Please choose a rating.', 'body.required' => 'Please share your thoughts.'];
+        return [
+            'user_id.required' => 'Braulio, please select a reviewer.',
+            'rating.required' => 'Braulio, please choose a rating.',
+            'body.required' => 'Braulio, please write a review.',
+        ];
     }
 }
