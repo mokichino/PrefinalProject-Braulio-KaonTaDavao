@@ -1,0 +1,1 @@
+{{ $paginator->withQueryString()->links() }}

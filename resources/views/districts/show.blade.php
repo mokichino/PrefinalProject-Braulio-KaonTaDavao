@@ -1,0 +1,3 @@
+@extends('layouts.app')
+@section('title', $district->name.' - Kaon Ta! Davao')
+@section('content')<section class="mx-auto max-w-6xl px-5 py-12"><a class="text-sm font-bold text-[#b05b3b]" href="{{ route('districts.index') }}">← All districts</a><h1 class="mt-4 font-display text-5xl font-bold">{{ $district->name }}</h1><p class="mt-3 text-[#68736d]">{{ $district->reviews()->count() }} reviews from this district</p><div class="mt-9 grid gap-5 md:grid-cols-2 lg:grid-cols-3">@forelse ($district->eateries as $eatery) @include('components.eatery-card', ['eatery' => $eatery]) @empty <p class="text-[#68736d]">No eateries here yet.</p>@endforelse</div></section>@endsection

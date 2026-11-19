@@ -1,0 +1,3 @@
+@extends('layouts.app')
+@section('title', 'Districts - Kaon Ta! Davao')
+@section('content')<section class="mx-auto max-w-6xl px-5 py-12"><p class="text-sm font-bold uppercase tracking-widest text-[#b05b3b]">Explore by place</p><h1 class="mt-2 font-display text-4xl font-bold">Davao districts</h1><div class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">@foreach ($districts as $district)<a href="{{ route('districts.show', $district) }}" class="border border-[#d9cdb8] bg-white p-6 hover:border-[#b05b3b]"><h2 class="font-display text-2xl font-bold">{{ $district->name }}</h2><p class="mt-3 text-sm text-[#68736d]">{{ $district->eateries_count }} eateries</p></a>@endforeach</div></section>@endsection
