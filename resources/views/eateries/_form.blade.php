@@ -1,21 +1,54 @@
 @include('partials.errors')
 <div class="grid gap-5 md:grid-cols-2">
-    <label class="field">Name<input name="name" value="{{ old('name', $eatery->name ?? '') }}" required></label>
-    <label class="field">District<select name="district_id" required><option value="">Choose a district</option>@foreach ($districts as $district)<option value="{{ $district->id }}" @selected(old('district_id', $eatery->district_id ?? '') == $district->id)>{{ $district->name }}</option>@endforeach</select></label>
-    <label class="field">Address<input name="address" value="{{ old('address', $eatery->address ?? '') }}" required></label>
-    <label class="field">Price range<input name="price_range" value="{{ old('price_range', $eatery->price_range ?? '') }}" placeholder="budget, mid, or splurge" required></label>
-    <label class="field">Specialty<input name="specialty" value="{{ old('specialty', $eatery->specialty ?? '') }}"></label>
-    <label class="field">Permit number<input name="permit_no" value="{{ old('permit_no', $eatery->permit->permit_no ?? '') }}" required></label>
-    <label class="field">Permit expiry<input type="date" name="expires_on" value="{{ old('expires_on', optional($eatery->permit ?? null)->expires_on?->format('Y-m-d')) }}" required></label>
+    <label class="field">Name
+        <input name="name" value="{{ old('name', $eatery->name ?? '') }}" required>
+        @error('name')<span class="text-sm text-red-700">{{ $message }}</span>@enderror
+    </label>
+    <label class="field">District
+        <select name="district_id" required>
+            <option value="">Choose a district</option>
+            @foreach ($districts as $district)
+                <option value="{{ $district->id }}" @selected(old('district_id', $eatery->district_id ?? '') == $district->id)>{{ $district->name }}</option>
+            @endforeach
+        </select>
+        @error('district_id')<span class="text-sm text-red-700">{{ $message }}</span>@enderror
+    </label>
+    <label class="field">Address
+        <input name="address" value="{{ old('address', $eatery->address ?? '') }}" required>
+        @error('address')<span class="text-sm text-red-700">{{ $message }}</span>@enderror
+    </label>
+    <label class="field">Price range
+        <select name="price_range" required>
+            <option value="">Choose a price range</option>
+            @foreach (['budget' => 'Budget', 'mid' => 'Mid', 'splurge' => 'Splurge'] as $value => $label)
+                <option value="{{ $value }}" @selected(old('price_range', $eatery->price_range ?? '') == $value)>{{ $label }}</option>
+            @endforeach
+        </select>
+        @error('price_range')<span class="text-sm text-red-700">{{ $message }}</span>@enderror
+    </label>
+    <label class="field">Specialty
+        <input name="specialty" value="{{ old('specialty', $eatery->specialty ?? '') }}">
+        @error('specialty')<span class="text-sm text-red-700">{{ $message }}</span>@enderror
+    </label>
+    <label class="field">Permit number
+        <input name="permit_no" value="{{ old('permit_no', $eatery->permit->permit_no ?? '') }}" required>
+        @error('permit_no')<span class="text-sm text-red-700">{{ $message }}</span>@enderror
+    </label>
+    <label class="field">Permit expiry
+        <input type="date" name="expires_on" value="{{ old('expires_on', optional($eatery->permit ?? null)->expires_on?->format('Y-m-d')) }}" required>
+        @error('expires_on')<span class="text-sm text-red-700">{{ $message }}</span>@enderror
+    </label>
 </div>
 
 <div class="mt-6 grid gap-4">
     <fieldset class="rounded-xl border border-[#d9cdb8] bg-white/70 p-4 sm:p-5">
         <legend class="px-2 text-sm font-bold">Status</legend>
+        <input type="hidden" name="is_open" value="0">
         <label class="grid grid-cols-[18px_minmax(0,1fr)] items-center gap-3 text-sm font-semibold">
             <input type="checkbox" name="is_open" value="1" class="h-4 w-4" @checked(old('is_open', $eatery->is_open ?? true))>
             <span>Currently open</span>
         </label>
+        @error('is_open')<span class="text-sm text-red-700">{{ $message }}</span>@enderror
     </fieldset>
 
     <fieldset class="rounded-xl border border-[#d9cdb8] bg-white/70 p-4 sm:p-5">
@@ -28,6 +61,8 @@
                 </label>
             @endforeach
         </div>
+        @error('features')<span class="text-sm text-red-700">{{ $message }}</span>@enderror
+        @error('features.*')<span class="text-sm text-red-700">{{ $message }}</span>@enderror
     </fieldset>
 </div>
 
