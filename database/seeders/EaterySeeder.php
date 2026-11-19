@@ -44,40 +44,29 @@ class EaterySeeder extends Seeder
             'expires_on' => '2027-06-24',
         ]);
 
-        foreach (range(1, 14) as $index) {
-            $name = 'Davao Table ' . $index;
+        $openEateries = Eatery::factory()->count(11)->create([
+            'district_id' => fn () => $districts->random(),
+        ]);
+        $closedEateries = Eatery::factory()->count(3)->closed()->create([
+            'district_id' => fn () => $districts->random(),
+        ]);
 
-            $eatery = Eatery::create([
-                'district_id' => $districts->values()->random(),
-                'name' => $name,
-                'slug' => Str::slug($name),
-                'address' => fake()->streetAddress(),
-                'price_range' => fake()->randomElement(['budget', 'mid', 'splurge']),
-                'specialty' => fake()->randomElement([
-                    'Grilled favorites',
-                    'Home-style meals',
-                    'Davao comfort food',
-                ]),
-                'is_open' => $index > 3,
-            ]);
-
+        foreach ($openEateries->concat($closedEateries) as $index => $eatery) {
             foreach (range(1, fake()->numberBetween(2, 5)) as $dishNumber) {
                 $eatery->dishes()->create([
-                    'name' => fake()->randomElement([
-                        'Adobo', 'Pancit', 'Grilled chicken', 'Sinuglaw', 'Tinola',
-                    ]),
+                    'name' => fake()->randomElement(['Adobo', 'Pancit', 'Grilled chicken', 'Sinuglaw', 'Tinola']),
                     'price' => fake()->randomFloat(2, 60, 350),
                     'is_bestseller' => fake()->boolean(25),
                 ]);
             }
 
-            $eatery->features()->attach(
-                $features->random(fake()->numberBetween(1, 3))->values()
+            $eatery->features()->sync(
+                $features->random(fake()->numberBetween(1, 3))->values()->all()
             );
 
             $eatery->permit()->create([
-                'permit_no' => 'DVO-2026-' . str_pad((string) ($index + 624), 4, '0', STR_PAD_LEFT),
-                'expires_on' => $index === 1
+                'permit_no' => 'DVO-2026-' . str_pad((string) ($index + 625), 4, '0', STR_PAD_LEFT),
+                'expires_on' => $index === 0
                     ? '2025-01-01'
                     : fake()->dateTimeBetween('now', '+2 years')->format('Y-m-d'),
             ]);

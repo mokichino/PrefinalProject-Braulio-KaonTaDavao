@@ -23,7 +23,7 @@ class EateryFactory extends Factory
             'name' => fake()->unique()->company(),
             'slug' => fn (array $attributes) => str($attributes['name'])->slug(),
             'address' => fake()->streetAddress(),
-            'price_range' => fake()->randomElement(['₱', '₱₱', '₱₱₱']),
+            'price_range' => fake()->randomElement(['budget', 'mid', 'splurge']),
             'specialty' => fake()->randomElement(['Grilled favorites', 'Home-style meals', 'Davao comfort food']),
             'is_open' => true,
         ];
